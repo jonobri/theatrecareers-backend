@@ -9,28 +9,6 @@ import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 
 from sqlalchemy import create_engine, update, text, Integer, Table
-# Insert absolute path to backend files
-sys.path.insert(1, '/Users/jonathanobrien/PycharmProjects/austheatrecareers/00backend_db')
-
-# import from python files
-# base
-from backend_base import Base
-
-# functions
-from backend_functions import query_to_df, create_career_table
-
-# variables
-from backend_variables import FIRST_YEAR, LAST_YEAR, YEAR_TUPLE, TABLE_DICT_LIST, LINK_ROLE_STATEMENTS, \
-    atc_engine, as_engine
-
-# query strings
-import backend_queries as bq
-
-# classes
-# Dunno why the IDE doesn't recognise this as being in-use, but please do not delete lol
-import backend_classes
-
-import get_data_22
 
 role_count_query = '''
 SELECT role_count AS count, COUNT(role_count) AS count_of_counts

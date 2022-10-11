@@ -83,10 +83,10 @@ COALESCE(w.workid, 0) AS workid, COALESCE(o.organisationid, 0) AS organisationid
 FROM (
 	SELECT DISTINCT t1.contributorid, functionid, t1.eventid, e.event_name, event_year
 	FROM ( 
-		SELECT contributorid, cel.`FUNCTION` AS functionid, cel.eventid, e.EVENT_NAME, e.YYYYFIRST_DATE AS event_year
+		SELECT cel.eventid, contributorid, cel.`FUNCTION` AS functionid, e.EVENT_NAME, e.YYYYFIRST_DATE AS event_year
 		FROM ausstage.conevlink cel 
 		LEFT JOIN events e ON cel.EVENTID = e.EVENTID  
-		GROUP BY CONTRIBUTORID, `function`, event_name, event_year 
+		GROUP BY CONTRIBUTORID, functionid, event_name, event_year 
 	) t1
 	JOIN events e ON e.EVENTID = t1.eventid
 	JOIN contributor c ON c.CONTRIBUTORID = t1.contributorid
@@ -112,10 +112,17 @@ AND contributorid IN (SELECT id FROM atc_alchemy.contributor);
 # TODO: as above. I think this SQL could use a revisit
 #  Check: how is first_year last_year data being filtered?
 career_query = '''
-SELECT contributorid, roleid, year, count(DISTINCT contributorid, event_name, workid, organisationid, e.year) AS count
+SELECT lt.contributorid, lt.roleid, t2.first_year, year, count(DISTINCT lt.contributorid, event_name, workid, organisationid, e.year) AS count
 FROM link_table lt
 JOIN event e ON lt.eventid = e.id
 JOIN contributor c ON lt.contributorid = c.id
+JOIN (
+	SELECT contributorid, roleid, min(year) AS first_year
+	FROM link_table lt
+	JOIN event e ON lt.eventid = e.id
+	GROUP BY contributorid, roleid
+	ORDER BY contributorid, roleid
+) t2 ON t2.contributorid = lt.contributorid AND lt.roleid = t2.roleid
 GROUP BY contributorid, roleid, year
 ORDER BY contributorid, roleid, year
 '''

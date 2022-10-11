@@ -78,7 +78,11 @@ roles_dict = pd.read_sql("SELECT * FROM role", connection).set_index('id').role.
 genders = [1, 2]
 genders_dict = pd.read_sql("SELECT * FROM gender", connection).set_index('id').gender.to_dict()
 
-query_params = {}
+query_params = {'role': 4,
+                'gender': 1,
+                'state': 4,
+                'year0': 1950,
+                'year1': 1959}
 
 
 # FIX THIS

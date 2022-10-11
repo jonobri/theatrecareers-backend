@@ -11,7 +11,7 @@ def query_to_df(query, engine, sql_input=False):
     with engine.connect() as connection:
         # check for params, run accordingly
         # Turn off FULL_GROUP_BY
-        # connection.execute("SET SESSION sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));")
+        connection.execute("SET SESSION sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));")
         if sql_input:
             output = pd.read_sql(query, connection, params=sql_input)
         else:
@@ -23,7 +23,7 @@ def query_to_df(query, engine, sql_input=False):
 # Create career table
 def create_career_table(table, engine):
     # Pivot the dataframe, create multi-index, and then transpose so years are rows, then reset the index
-    table = table.pivot_table(index=['contributorid', 'roleid'],
+    table = table.pivot_table(index=['contributorid', 'roleid', 'first_year'],
                     columns='year', values='count', fill_value=0).T.reset_index().drop(columns='year')
 
     # Get the first year of that role.

@@ -42,8 +42,8 @@ FROM (
     WHERE c.roleid IN (%(role)s)
     AND c2.genderid IN (1, 2)
     AND c2.stateid IN (1, 2, 3, 4, 5, 6)
-    AND c2.first_year >= %(year0)s
-    AND c2.first_year <= %(year1)s
+    AND c.first_year >= %(year0)s
+    AND c.first_year <= %(year1)s
     AND length > 2
 ) t1
 GROUP BY career_length
@@ -59,8 +59,8 @@ FROM (
     WHERE c.roleid IN (3, 5, 6, 7, 9, 10, 11, 12, 13, 14)
     AND c2.genderid IN (1, 2)
     AND c2.stateid IN (1, 2, 3, 4, 5, 6)
-    AND c2.first_year >= %(year0)s
-    AND c2.first_year <= %(year1)s
+    AND c.first_year >= %(year0)s
+    AND c.first_year <= %(year1)s
     AND length > 2
 ) t1
 GROUP BY career_length
