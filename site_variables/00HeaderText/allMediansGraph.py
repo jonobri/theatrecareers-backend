@@ -82,3 +82,5 @@ for year in years:
 all_data[f'{title}'] = output
 
 allMediansGraph = all_data
+
+print(allMediansGraph['Females'])
