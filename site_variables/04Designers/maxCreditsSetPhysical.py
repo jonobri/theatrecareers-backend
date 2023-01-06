@@ -8,13 +8,14 @@ connection = engine.connect()
 connection.execute("SET SESSION sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));")
 
 query = '''
-SELECT c.display_name, SUM(count) AS count
+SELECT c.display_name, c.genderid, SUM(count) AS count, c.last_year - c.first_year AS length
 FROM (
-    SELECT contributorid, count
+    SELECT contributorid, count, length
 	FROM career c
+	JOIN role r ON c.roleid = r.id
 	WHERE length > 2
 	AND count > 2
-	AND roleid IN (3, 5, 6, 7, 9, 11, 14)
+	AND roleid IN (5)
     AND contributorid IN (
         SELECT id
         FROM contributor c
@@ -31,7 +32,13 @@ LIMIT 5
 
 data = pd.read_sql(query, connection)
 
-maxCreditsName = data.loc[0]['display_name']
-maxCreditsCount = data.loc[0]['count']
+print(data)
 
-print(maxCreditsName, maxCreditsCount)
+maxCreditsSetPhysical = {
+    'Top Overall': data.loc[0],
+    'Top Female': data.loc[data['genderid'] == 2]
+}
+
+print(maxCreditsSetPhysical)
+
+print(maxCreditsSetPhysical['Top Overall']['display_name'])
